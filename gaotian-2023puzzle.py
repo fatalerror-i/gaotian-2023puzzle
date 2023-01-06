@@ -223,17 +223,17 @@ ans['Oct'] = hex(prime_factorization(int(ans['Sept'], 16))[-1][0])[2:]
 #   + 注意到网格尺寸为8\*9、答案长度为16，因此每一步的前进方向必须为向右或向下，最终路径上的数字相连即为答案。
 
 # %%
-digits = [
+digits = '\n'.join([
     '0068bc763',
-    '46a' + ans['Oct'][3] + 'afc' + ans['Oct'][4] + 'e',
-    '7' + ans['Oct'][0] + '959e7dc',
-    '8d89' + ans['Oct'][1] + 'e' + ans['Oct'][2] + ans['Oct'][1] + '1',
+    '46a{3}afc{4}e',
+    '7{0}959e7dc',
+    '8d89{1}e{2}{1}1',
     'eac9ecd84',
-    '2d' + ans['Oct'][4] + '6f919a',
-    'c' + ans['Oct'][0] + '75d7' + ans['Oct'][2] + '1' + ans['Oct'][3],
+    '2d{4}6f919a',
+    'c{0}75d7{2}1{3}',
     '43eba4f61'
-]
-grid = [[int(d, 16) for d in row] for row in digits]
+    ]).format(*ans['Oct'])
+grid = [[int(d, 16) for d in row] for row in digits.split()]
 
 def minCostRoute(grid: List[int]) -> str:
     # 动态规划
@@ -312,7 +312,7 @@ sequence = [
     ('May', 5, 23),
     ('Aug', 1, 3),
     ('Jul', 11, 2)
-]
+    ]
 blessing = ''.join(chr(int(ans[month][idx1-1] + ans[month][idx2-1], 16)) for month, idx1, idx2 in sequence)
 # print(blessing)
 
