@@ -223,7 +223,7 @@ ans['Oct'] = hex(prime_factorization(int(ans['Sept'], 16))[-1][0])[2:]
 #   + 注意到网格尺寸为8\*9、答案长度为16，因此每一步的前进方向必须为向右或向下，最终路径上的数字相连即为答案。
 
 # %%
-digits = '\n'.join([
+digits = [
     '0068bc763',
     '46a{3}afc{4}e',
     '7{0}959e7dc',
@@ -232,28 +232,30 @@ digits = '\n'.join([
     '2d{4}6f919a',
     'c{0}75d7{2}1{3}',
     '43eba4f61'
-    ]).format(*ans['Oct'])
-grid = [[int(d, 16) for d in row] for row in digits.split()]
+    ]
+for i in range(len(digits)):
+    digits[i] = digits[i].format(*ans['Oct'])
+grid = [[int(d, 16) for d in row] for row in digits]
 
-def minCostRoute(grid: List[int]) -> str:
+def minCostRoute(grid: List[int]) -> List[Tuple[int, int]]:
     # 动态规划
     rows = len(grid)
     cols = len(grid[0])
-    curr = [[0] * cols for _ in range(rows)] # 到达当前格子的最小代价
     step = [[(0, 0)] * cols for _ in range(rows)] # 到达当前格子代价最小的上一步走法
+    # 到达当前格子的最小代价，直接原地操作
     for i in range(1, rows):
-        curr[i][0] = curr[i-1][0] + grid[i][0]
+        grid[i][0] += grid[i-1][0]
         step[i][0] = (i-1, 0)
     for j in range(1, cols):
-        curr[0][j] = curr[0][j-1] + grid[0][j]
+        grid[0][j] += grid[0][j-1]
         step[0][j] = (0, j-1)
     for i in range(1, rows):
         for j in range(1, cols):
-            if curr[i-1][j] < curr[i][j-1]:
-                curr[i][j] = curr[i-1][j] + grid[i][j]
+            if grid[i-1][j] < grid[i][j-1]:
+                grid[i][j] += grid[i-1][j]
                 step[i][j] = (i-1, j)
             else:
-                curr[i][j] = curr[i][j-1] + grid[i][j]
+                grid[i][j] += grid[i][j-1]
                 step[i][j] = (i, j-1)
 
     route = [(rows-1, cols-1)]
@@ -263,9 +265,9 @@ def minCostRoute(grid: List[int]) -> str:
             break
         route.append(step[i][j])
 
-    return ''.join(hex(grid[i][j])[2:] for i, j in route[::-1])
+    return route[::-1]
 
-ans['Nov'] = minCostRoute(grid)
+ans['Nov'] = ''.join(digits[i][j] for i, j in minCostRoute(grid))
 
 # %% [markdown]
 # # 0x0e
